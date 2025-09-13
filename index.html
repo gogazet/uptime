@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoGazet Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    #status {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    .progress-container {
+      width: 80%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      height: 25px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #4caf50;
+      text-align: center;
+      line-height: 25px;
+      color: white;
+      font-size: 0.9rem;
+      transition: width 0.5s ease;
+    }
+    footer {
+      position: absolute;
+      bottom: 15px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>GoGazet Uptime Status</h1>
+  <p id="status">🔄 Checking website status...</p>
+  
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar">0%</div>
+  </div>
+
+  <footer>
+    © <span id="year"></span> GoGazet — All systems operational ✅
+  </footer>
+
+  <script>
+    const statusText = document.getElementById("status");
+    const progressBar = document.getElementById("progress-bar");
+    const year = document.getElementById("year");
+    year.textContent = new Date().getFullYear();
+
+    function updateProgress(percent) {
+      progressBar.style.width = percent + "%";
+      progressBar.textContent = percent + "%";
+    }
+
+    async function checkWebsite() {
+      try {
+        // Fake progress animation
+        let percent = 0;
+        let progressInterval = setInterval(() => {
+          if (percent < 90) {
+            percent += 10;
+            updateProgress(percent);
+          }
+        }, 200);
+
+        // Try fetching the homepage
+        let response = await fetch("https://gogazet.com/", { method: "HEAD" });
+        clearInterval(progressInterval);
+
+        if (response.ok) {
+          updateProgress(100);
+          statusText.textContent = "✅ Everything is OK — gogazet.com is online!";
+          progressBar.style.background = "#4caf50";
+        } else {
+          statusText.textContent = "⚠️ Site is responding but may have issues.";
+          progressBar.style.background = "orange";
+        }
+      } catch (error) {
+        updateProgress(100);
+        statusText.textContent = "❌ Cannot reach gogazet.com right now.";
+        progressBar.style.background = "red";
+      }
+    }
+
+    checkWebsite();
+  </script>
+</body>
+</html>
